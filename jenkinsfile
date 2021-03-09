@@ -9,7 +9,7 @@ pipeline {
    stages{
        stage("SCM checkout") {
            steps {
-               git credentialsId "https://github.com/lanru2001/my-web-page.git"
+               git credentialsId "https://github.com/lanru2001/The_CE_Shop_CI-CD-Pipeline.git"
                   }
                }
            
@@ -22,7 +22,7 @@ pipeline {
        stage("Deploy-Dev"){
            steps{
                sshagent(){
-                   sh "scp -o StrictHostKeyChecking=no webapp/target/webapp.war  ec2-user@18.221.190.93:/opt/tomcat/webapps/"
+                   sh "scp -o StrictHostKeyChecking=no webapp/target/webapp.war  ec2-user@<app_server_ip>:/opt/tomcat/webapps/"
                            
               }
            }
