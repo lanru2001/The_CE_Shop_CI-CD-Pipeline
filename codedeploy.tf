@@ -23,7 +23,14 @@ resource "aws_codedeploy_deployment_group" "app_deploy" {
     type  = "KEY_AND_VALUE"
     value = "filtervalue"
   }
-
+  
+  ec2_tag_set {
+    key   = "filterkey"
+    type  = "KEY_AND_VALUE"
+    value = "filtervalue"    
+    
+  }
+  
   trigger_configuration {
     trigger_events     = ["DeploymentFailure"]
     trigger_name       = "app_deploy-trigger"
