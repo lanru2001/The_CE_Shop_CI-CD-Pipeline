@@ -110,3 +110,8 @@ variable "create" {
   type        = bool
   default     = true
 }
+
+
+variable "name" {
+  default = "ec2-app"
+}
