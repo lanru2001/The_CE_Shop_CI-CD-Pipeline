@@ -3,7 +3,7 @@ resource "aws_codepipeline" "pipeline_project" {
   role_arn = "${aws_iam_role.build_pipeline_role.arn}"
 
   artifact_store {
-    location = "${aws_s3_bucket.web-app.id}"
+    location = "${aws_s3_bucket.app_web.id}"
     type     = "S3"
   }
 
@@ -46,7 +46,7 @@ resource "aws_codepipeline" "pipeline_project" {
   }
 
   stage {
-    name = "DeployDev"
+    name = "Deploy"
 
     action {
       name            = "Deploy"
@@ -57,7 +57,7 @@ resource "aws_codepipeline" "pipeline_project" {
       version         = "1"
 
       configuration {
-        ProjectName = "${aws_codebuild_project.deploy_dev.name}"
+        ProjectName = "${aws_codebuild_project.project.name}"
       }
     }
   }  
