@@ -1,6 +1,13 @@
 resource "aws_s3_bucket" "app_web" {
   bucket = "${var.account_name}-app_web"
-  acl    = "private"                   
+  acl    = "private"     
+  versioning = {
+    enabled = true 
+  }
+  tags = {
+    Name        = "app_web"
+    Environment = "Dev"
+  }  
 }                                      
 
 resource "aws_s3_bucket_policy" "app_web" {
