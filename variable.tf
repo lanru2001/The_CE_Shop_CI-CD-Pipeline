@@ -100,3 +100,7 @@ variable "repository_name" {
 variable "group_name" {
   default = "ec2_deployment"
 }
+
+variable "project" {
+  default = "web-app-project"
+}
