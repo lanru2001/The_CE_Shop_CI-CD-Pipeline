@@ -96,3 +96,6 @@ variable "repository_name" {
   description = "GitHub repository name"
   default     = "static-web-example"
 }
+variable "group_name" {
+	default = "ec2_deployment"
+}
