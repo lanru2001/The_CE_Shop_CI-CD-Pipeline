@@ -1,7 +1,7 @@
 # aws-cicd-pipeline-project
 
 
-AWS CI/CD Pipeline using Github, CodeBuild, CodeDeploy and Code
+AWS CI/CD Pipeline using Github, CodeBuild, CodeDeploy and CodePipeline that automate the entire build and deployment process after a new commit.
 
 The CI/CD CodePipeline architecture use the tools , platforms and service :
 
