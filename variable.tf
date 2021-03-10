@@ -4,7 +4,6 @@ variable "region" {
 }
 
 variable "AMI" {
-
   default = "ami-03d64741867e7bb94"
 }
 
@@ -64,14 +63,15 @@ variable "github_org" {
 }
 
 variable "github_token" {
+  default = ""	
 }
 
 variable "project" {
-	default = "terraform-codepipeline-project"
+  default = "terraform-codepipeline-project"
 }
 
 variable "app" {
-	default = "terraform-codepipeline-app"
+  default = "terraform-codepipeline-app"
 }
 
 variable "account_id" {
