@@ -32,7 +32,7 @@ resource "aws_codebuild_project" "project" {
   
   cache {
     type     = "S3"
-    location = aws_s3_bucket.example.bucket
+    location = aws_s3_bucket.app_web.bucket
   }  
   
   logs_config {
