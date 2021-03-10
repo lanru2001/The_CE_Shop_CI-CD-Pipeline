@@ -75,11 +75,11 @@ variable "app" {
 }
 
 variable "account_id" {
-
+  default = "216147165517"
 }
 
 variable "docker_build_image" {
-  default = "Amazon Linux 2"
+  default = "centos"
 }
 
 variable "repository_branch" {
