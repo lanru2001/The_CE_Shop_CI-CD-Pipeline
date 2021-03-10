@@ -2,7 +2,7 @@ resource "aws_codebuild_project" "project" {
   name          = "${var.project}"
   description   = "${var.project} CodeBuild Project"
   build_timeout = "10"
-  service_role  = "${aws_iam_role.codebuild_role.arn}"
+  service_role  = "${aws_iam_role.build_pipeline_role.arn}"
 
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
@@ -20,7 +20,7 @@ resource "aws_codebuild_project" "project" {
     }
   }
    
-  source_version = "master"
+  source_version = "main". #master
   
   tags = {
     Environment = "Test"
