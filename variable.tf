@@ -60,7 +60,7 @@ variable "account_name" {
 }
 
 variable "github_org" {
-  default = "lanru2001"
+  default = "atolanrewaju2020"
 }
 
 variable "github_token" {
@@ -98,5 +98,5 @@ variable "repository_name" {
 }
 
 variable "group_name" {
-	default = "ec2_deployment"
+  default = "ec2_deployment"
 }
