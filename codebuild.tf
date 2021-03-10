@@ -12,7 +12,7 @@ resource "aws_codebuild_project" "project" {
 
   source {
     type            = "GITHUB"
-    location        = "https://github.com/mitchellh/packer.git"
+    location        = "https://github.com/lanru2001/aws-cicd-pipeline-project02.git"
     git_clone_depth = 1
 
     git_submodules_config {
