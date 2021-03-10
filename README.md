@@ -19,6 +19,6 @@ CodeBuild - for building the code
 
 codeDeploy - for deploying the application
 
-CodePipeline - for creating the cI/CD Pipeline
+CodePipeline - for creating the CI/CD Pipeline
 
 
