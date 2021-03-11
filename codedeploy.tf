@@ -18,24 +18,25 @@ resource "aws_codedeploy_deployment_group" "app_deploy" {
   service_role_arn       = aws_iam_role.build_pipeline_role.arn
   deployment_config_name = aws_codedeploy_deployment_config.app_deploy.id
 
-  ec2_tag_filter {
-    key   = local.tag["key"]
-    type  = "KEY_AND_VALUE"
-    value =local.tag["key"]  
-  }
-  
   ec2_tag_set {
-    key   = local.tag[ "key" ]    
-    type  = "KEY_AND_VALUE"
-    value = local.tag ["key" ]
-    
+    ec2_tag_filter {
+      key   = "Name"   # key and value of your ec2 instance tag 
+      type  = "KEY_AND_VALUE"
+      value = "web_server"
   }
-  
-  trigger_configuration {
-    trigger_events     = ["DeploymentFailure"]
-    trigger_name       = "app_deploy-trigger"
-    trigger_target_arn = "app_deploy-topic-arn"
+
+  ec2_tag_filter {
+      key   = "Name"
+      type  = "KEY_AND_VALUE"
+      value = "web_server"
+    }
   }
+
+  #trigger_configuration {
+  #  trigger_events     = ["DeploymentFailure"]
+  #  trigger_name       = "app_deploy-trigger"
+  #  trigger_target_arn = "app_deploy-topic-arn"
+  #}
 
   auto_rollback_configuration {
     enabled = true
