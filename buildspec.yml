@@ -3,7 +3,7 @@ version: 0.2
 phases: 
   install: 
     commands: 
-      - "echo \"Entered the install phase ...\""  build: 
+      - "echo \"Entered the install phase ...\"" 
     commands: 
       - "echo \"Entered the build phase...\""
       - "echo \"Build started on'date'\""
