@@ -1,12 +1,12 @@
 resource "aws_codebuild_project" "project" {
-  name          = "${var.project}"
+  name          =  var.project
   description   = "${var.project} CodeBuild Project"
   build_timeout = "10"
-  service_role  = "${aws_iam_role.build_pipeline_role.arn}"
+  service_role  = aws_iam_role.build_pipeline_role.arn
 
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
-    image        = "${var.docker_build_image}"
+    image        = var.docker_build_image
     type         = "LINUX_CONTAINER"
   }
 
@@ -20,7 +20,7 @@ resource "aws_codebuild_project" "project" {
     }
   }
    
-  source_version = "main". #master
+  source_version = "main" #master
   
   tags = {
     Environment = "Test"
@@ -38,6 +38,8 @@ resource "aws_codebuild_project" "project" {
   logs_config {
     cloudwatch_logs {
       status = "ENABLED"
-    }  
+    }
+  }
+  
 }
 
