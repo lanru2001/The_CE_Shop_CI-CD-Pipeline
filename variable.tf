@@ -55,11 +55,11 @@ variable "private-subnets" {
   default = ["10.0.4.0/24" , "10.0.5.0/24" , "10.0.6.0/24" ]
 }
 variable "account_name" {
-  default = "lanru2001"
+  default = "Azeez Temitope Olanrewaju"
 }
 
 variable "github_org" {
-  default = "atolanrewaju2020"
+  default = "none"
 }
 
 variable "github_token" {
@@ -79,12 +79,12 @@ variable "account_id" {
 }
 
 variable "docker_build_image" {
-  default = "centos"
+  default = "LINUX_CONTAINER"
 }
 
 variable "repository_branch" {
   description = "Repository branch to connect to"
-  default     = "github.com/lanru2001/aws-cicd-pipeline-project02/edit/main"
+  default     = "github.com/lanru2001/aws-cicd-pipeline-project02"
 }
 
 variable "repository_owner" {
@@ -94,7 +94,7 @@ variable "repository_owner" {
 
 variable "repository_name" {
   description = "GitHub repository name"
-  default     = "https://github.com/lanru2001/aws-cicd-pipeline-project02/edit/main"
+  default     = "https://github.com/lanru2001/aws-cicd-pipeline-project02"
 }
 
 variable "group_name" {
