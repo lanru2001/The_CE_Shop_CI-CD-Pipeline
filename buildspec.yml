@@ -4,7 +4,6 @@ phases:
   install: 
     commands: 
       - "echo \"Entered the install phase ...\"" 
-    commands: 
       - "echo \"Entered the build phase...\""
       - "echo \"Build started on'date'\""
       - "find production.txt"
