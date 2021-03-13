@@ -8,9 +8,9 @@ variable "AMI" {
 }
 
 variable "environment" {
-  type = map
+  type = map(any)
   default = {
-    dev = "dev" 
+    dev = "dev"
     stg = "stg"
     prd = "prd"
   }
@@ -18,22 +18,22 @@ variable "environment" {
 
 variable "PATH_TO_PRIVATE_KEY" {
   default = "mykey"
-  }
+}
 
-variable "PATH_TO_PUBLIC_KEY"{
+variable "PATH_TO_PUBLIC_KEY" {
   default = "mykey.pub"
-  }
+}
 
 variable "INSTANCE_USERNAME" {
   default = "ec2-user"
- }
+}
 
-variable "instance_type" { 
-  default = "t2.micro" 
+variable "instance_type" {
+  default = "t2.micro"
 }
 
 variable "key_name" {
-  default = "mykey.pem.pub" 
+  default = "mykey.pem.pub"
 }
 
 variable "vpc-cidr" {
@@ -41,29 +41,29 @@ variable "vpc-cidr" {
 }
 
 variable "azs" {
-  type = list
-  default = ["us-east-2a", "us-east-2b" , "us-east-2c"]
+  type    = list
+  default = ["us-east-2a", "us-east-2b", "us-east-2c"]
 }
 
 variable "public-subnets" {
-  type = list
-  default = ["10.0.1.0/24", "10.0.7.0/24" , "10.0.3.0/24"]
+  type    = list
+  default = ["10.0.1.0/24", "10.0.7.0/24", "10.0.3.0/24"]
 }
 
 variable "private-subnets" {
-  type = list
-  default = ["10.0.4.0/24" , "10.0.5.0/24" , "10.0.6.0/24" ]
+  type    = list
+  default = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 }
 variable "account_name" {
-  default = "Azeez Temitope Olanrewaju"
+  default = "application-server"
 }
 
 variable "github_org" {
-  default = "none"
+  default = "Azeez Temitope Olanrewaju"
 }
 
 variable "github_token" {
-  default = "878ca43d053c5a5680c1ad9af1941aee37e04fc0"	
+  type = string
 }
 
 variable "project" {
@@ -75,7 +75,7 @@ variable "app" {
 }
 
 variable "account_id" {
-  default = "216147165517"
+  type = string 
 }
 
 variable "docker_build_image" {
@@ -84,12 +84,12 @@ variable "docker_build_image" {
 
 variable "repository_branch" {
   description = "Repository branch to connect to"
-  default     = "github.com/lanru2001/aws-cicd-pipeline-project02"
+  default     = "main"
 }
 
 variable "repository_owner" {
   description = "GitHub repository owner"
-  default     = "lanru2001"
+  default     = "Azeez Temitope Olanrewaju"
 }
 
 variable "repository_name" {
@@ -101,10 +101,6 @@ variable "group_name" {
   default = "ec2-app-deployment"
 }
 
-variable "project" {
-  default = "web-app-project"
-}
-
 variable "create" {
   description = "Whether to create a resource"
   type        = bool
@@ -113,5 +109,16 @@ variable "create" {
 
 
 variable "name" {
-  default = "ec2-app"
+  default = "app-deploy"
 }
+
+
+variable "name_prefix" {
+  default = "app"
+}
+
+
+variable "name_suffix" {
+  default = "web"
+}
+
