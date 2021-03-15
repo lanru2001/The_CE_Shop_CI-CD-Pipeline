@@ -59,7 +59,7 @@ variable "account_name" {
 }
 
 variable "github_org" {
-  default = "Azeez Temitope Olanrewaju"
+  default = "lanru2001"
 }
 
 variable "github_token" {
@@ -67,7 +67,7 @@ variable "github_token" {
 }
 
 variable "project" {
-  default = "terraform-codepipeline-project"
+  default = "aws-cicd-pipeline-project02"
 }
 
 variable "app" {
@@ -75,7 +75,7 @@ variable "app" {
 }
 
 variable "account_id" {
-  type = string 
+  type = string
 }
 
 variable "docker_build_image" {
@@ -121,4 +121,3 @@ variable "name_prefix" {
 variable "name_suffix" {
   default = "web"
 }
-
