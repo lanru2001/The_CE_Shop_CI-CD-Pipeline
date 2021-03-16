@@ -5,7 +5,7 @@ resource "aws_codedeploy_app" "application_deploy" {
 
 resource "aws_codedeploy_deployment_config" "application_deploy" {
   deployment_config_name = "application-deploy-config"
-  compute_platform = "Server"
+  compute_platform       = "Server"
   minimum_healthy_hosts {
     type  = "HOST_COUNT"
     value = 2
@@ -15,14 +15,35 @@ resource "aws_codedeploy_deployment_config" "application_deploy" {
 resource "aws_codedeploy_deployment_group" "app_deploy" {
   app_name               = aws_codedeploy_app.application_deploy.name
   deployment_group_name  = var.group_name
-  service_role_arn       = aws_iam_role.build_role.arn
+  service_role_arn       = aws_iam_role.deploy_role.arn  
   deployment_config_name = aws_codedeploy_deployment_config.application_deploy.id
+  
+  deployment_style {
+    deployment_option = "WITH_TRAFFIC_CONTROL"
+    deployment_type   = "BLUE_GREEN"
+  }
+  
+  blue_green_deployment_config {
+    deployment_ready_option {
+       action_on_timeout    = "STOP_DEPLOYMENT"
+       wait_time_in_minutes = 60
+    }
+  
+    green_fleet_provisioning_option {
+      action = "DISCOVER_EXISTING"
+    }
+
+    terminate_blue_instances_on_deployment_success {
+      action = "KEEP_ALIVE"
+    }
+  }
 
   ec2_tag_set {
     ec2_tag_filter {
       key   = "Name" # key and value of your ec2 instance tag 
       type  = "KEY_AND_VALUE"
-      value = "web_server"
+      value = "web_server_auto"
+   
     }
 
     ec2_tag_filter {
@@ -30,7 +51,13 @@ resource "aws_codedeploy_deployment_group" "app_deploy" {
       type  = "KEY_AND_VALUE"
       value = "web_server"
     }
+ 
   }
+
+  #load_balancer_info {    #Research how to include load balancer info 
+  #  elb_info {
+  #    name = aws_elb.example.name
+  #}
 
   #trigger_configuration {
   #  trigger_events     = ["DeploymentFailure"]
@@ -47,4 +74,5 @@ resource "aws_codedeploy_deployment_group" "app_deploy" {
     alarms  = ["my-alarm-name"]
     enabled = true
   }
+
 }
