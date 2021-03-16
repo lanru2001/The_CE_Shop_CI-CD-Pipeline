@@ -8,8 +8,7 @@ resource "aws_iam_role" "build_role" {
       "Effect": "Allow",
       "Principal": {
         "Service": [
-          "codebuild.amazonaws.com",
-          "codedeploy.amazonaws.com"
+          "codebuild.amazonaws.com"
           
         ]
       },
@@ -30,7 +29,7 @@ resource "aws_iam_policy" "codebuild_policy" {
 	"Statement": [{
 			"Effect": "Allow",
 			"Resource": [
-				"arn:aws:logs:${var.region}:${var.account_id}:log-group:/aws/codebuild/*"
+				"*"
 			],
 			"Action": [
 				"logs:CreateLogGroup",
@@ -63,7 +62,7 @@ resource "aws_iam_policy" "codebuild_policy" {
 				"codebuild:BatchPutCodeCoverages"
 			],
 			"Resource": [
-				"arn:aws:codebuild:your-region:your-aws-account-id:report-group/report-group-name-1"
+				"arn:aws:codebuild:us-east-2:216147165517:*"
 			]
 		}
 	]
@@ -90,17 +89,19 @@ resource "aws_iam_role" "codepipeline_role" {
       "Principal": {
         "Service": "codepipeline.amazonaws.com"
       },
-      "Action": "sts:AssumeRole",
-      "Sid": ""
+      "Action": "sts:AssumeRole"
+     
     }
   ]
 }
 EOF
 }
 
+
 resource "aws_iam_role_policy" "codepipeline_policy" {
   name = "codepipeline_policy"
-  role = aws_iam_role.codepipeline_role.name
+  role = aws_iam_role.codepipeline_role.id
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -114,7 +115,7 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
         "s3:PutObject"
       ],
       "Resource": [
-        "${aws_s3_bucket.app_web.arn}",
+        "${aws_s3_bucket.app_web.arn}",   
         "${aws_s3_bucket.app_web.arn}/*"
       ]
     },
@@ -122,35 +123,42 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
       "Effect": "Allow",
       "Action": [
         "codebuild:BatchGetBuilds",
-        "codebuild:StartBuild",
-        "codedeploy:BatchGetApplicaions",
-        "codedeploy:BatchGetDeploymentGroups",
-        "codedeploy:BatchGetDeployments",
-        "codedeploy:CreateDeployment",
-        "codedeploy:ListDeploymentInstances"
-
+        "codebuild:StartBuild"
       ],
       "Resource": "*"
-    },
-     
-    {
-      "Effect":"Allow",
-      "Action": [
-        "cloudwatch:*"
-      ],
-      "Resource": [
-        "*"
-      ]
     }
-
   ]
 }
 EOF
 }
 
-
-#resource "aws_iam_role_policy_attachment" "pipeline_attachment" {
-
-#   role = aws_iam_role.codepipeline_role.name
-#   policy_arn = aws_iam_role_policy.codepipeline_policy.id
+#data "aws_kms_alias" "s3kmskey" {
+# name = "alias/myKmsKeyMainKey"
 #}
+
+
+resource "aws_iam_role" "deploy_role" {
+  name               = "deploy-role"
+  assume_role_policy = <<EOF
+{
+   "Version": "2012-10-17",
+   "Statement": [
+      {
+         "Sid": "",
+         "Effect": "Allow",
+         "Principal": {
+            "Service": [
+               "codedeploy.amazonaws.com"
+            ]
+         },
+         "Action": "sts:AssumeRole"
+         }
+   ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "AWSCodeDeployRole" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+  role       = aws_iam_role.deploy_role.name
+}
