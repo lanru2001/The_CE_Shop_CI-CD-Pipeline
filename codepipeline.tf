@@ -1,4 +1,3 @@
-
 resource "aws_codepipeline" "pipeline_project" {
   name     = "${var.app}-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
@@ -41,7 +40,7 @@ resource "aws_codepipeline" "pipeline_project" {
       version         = "1"
 
       configuration = {
-        ProjectName = "var.project" #"${aws_codebuild_project.project.name}"  
+        ProjectName = var.project #"${aws_codebuild_project.project.name}"  
       }
     }
   }
@@ -84,23 +83,27 @@ resource "aws_codepipeline" "pipeline_project" {
   }
 }
 
+#The aws_codestarconnections_connection resource is created in the state PENDING. Authentication with the connection provider must be comp#leted in the AWS Console.
+#resource "aws_codestarconnections_connection" "github_connection" {
+#  name          = "aws-cicd-pipeline-project02"
+#  provider_type = "GitHub"
+#}
 
-
-resource "aws_codepipeline_webhook" "pipeline_project" {
-  name            = "webhook-github-pipeline"
-  authentication  = "GITHUB_HMAC"
-  target_action   = "Source"
-  target_pipeline = aws_codepipeline.pipeline_project.name
-
-  authentication_configuration {
-    secret_token = var.github_token 
-  }
-
-  filter {
-    json_path    = "$.ref"
-    match_equals = "refs/heads/{Branch}"
-  }
-}
+#resource "aws_codepipeline_webhook" "pipeline_project" {
+#  name            = "webhook-github-pipeline"
+#  authentication  = "GITHUB_HMAC"
+#  target_action   = "Source"
+#  target_pipeline = aws_codepipeline.pipeline_project.name
+#
+#  authentication_configuration {
+#    secret_token = var.webhook-secret-token
+#  }
+#
+#  filter {
+#    json_path    = "$.ref"
+#    match_equals = "refs/heads/${var.project}"
+#  }
+#}
 
 
 # Wire the CodePipeline webhook into a GitHub repository.
@@ -113,7 +116,7 @@ resource "aws_codepipeline_webhook" "pipeline_project" {
 #    url          = "aws_codepipeline_webhook.pipeline_project.url"
 #    content_type = "json"
 #    insecure_ssl = true
-#    secret = local.webhook_secret
+#    secret = var.webhook-secret-token
 #
 #  }
 #
