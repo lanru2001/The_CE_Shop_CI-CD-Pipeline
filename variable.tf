@@ -1,4 +1,5 @@
 
+
 variable "region" {
   default = "us-east-2"
 }
@@ -67,6 +68,7 @@ variable "github_token" {
 }
 
 variable "project" {
+  type    = string
   default = "aws-cicd-pipeline-project02"
 }
 
@@ -78,8 +80,12 @@ variable "account_id" {
   type = string
 }
 
+#variable "docker_build_image" {
+#  default = "LINUX_CONTAINER"
+#}
+
 variable "docker_build_image" {
-  default = "LINUX_CONTAINER"
+  default = "aws/codebuild/standard:1.0"
 }
 
 variable "repository_branch" {
@@ -120,4 +126,8 @@ variable "name_prefix" {
 
 variable "name_suffix" {
   default = "web"
+}
+
+variable "webhook-secret-token" {
+  type = string
 }
