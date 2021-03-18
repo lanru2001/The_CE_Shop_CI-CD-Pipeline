@@ -1,10 +1,11 @@
 locals {
-  tags = concat(
-    [
-      {
-        "key"                 = "Name"
-        "value"               = var.name
-        "propagate_at_launch" = true
-      },
-    ]
-}   
+  tags = [
+    {
+      "key"                 = "Name"
+      "value"               = "app-server"
+      "propagate_at_launch" = true
+    }
+  ]
+
+  #  webhook_secret = "my-secret-web"
+}
