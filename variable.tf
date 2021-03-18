@@ -1,11 +1,9 @@
-
-
 variable "region" {
-  default = "us-east-2"
+  type = string
 }
 
 variable "AMI" {
-  default = "ami-03d64741867e7bb94"
+  type = string
 }
 
 variable "environment" {
@@ -18,49 +16,46 @@ variable "environment" {
 }
 
 variable "PATH_TO_PRIVATE_KEY" {
-  default = "mykey"
+  type = string
 }
 
 variable "PATH_TO_PUBLIC_KEY" {
-  default = "mykey.pub"
+  type = string
 }
 
 variable "INSTANCE_USERNAME" {
-  default = "ec2-user"
+  type = string
 }
 
 variable "instance_type" {
-  default = "t2.micro"
+  type = string
 }
 
 variable "key_name" {
-  default = "mykey.pem.pub"
+  type = string
 }
 
 variable "vpc-cidr" {
-  default = "10.0.0.0/16"
+  type = string
 }
 
 variable "azs" {
-  type    = list
-  default = ["us-east-2a", "us-east-2b", "us-east-2c"]
+  type = list
 }
 
 variable "public-subnets" {
-  type    = list
-  default = ["10.0.1.0/24", "10.0.7.0/24", "10.0.3.0/24"]
+  type = list
 }
 
 variable "private-subnets" {
-  type    = list
-  default = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+  type = list
 }
 variable "account_name" {
-  default = "application-server"
+  type = string
 }
 
 variable "github_org" {
-  default = "lanru2001"
+  type = string
 }
 
 variable "github_token" {
@@ -68,12 +63,11 @@ variable "github_token" {
 }
 
 variable "project" {
-  type    = string
-  default = "aws-cicd-pipeline-project02"
+  type = string
 }
 
 variable "app" {
-  default = "terraform-codepipeline-app"
+  type = string
 }
 
 variable "account_id" {
@@ -85,47 +79,44 @@ variable "account_id" {
 #}
 
 variable "docker_build_image" {
-  default = "aws/codebuild/standard:1.0"
+  type = string
 }
 
 variable "repository_branch" {
+  type        = string
   description = "Repository branch to connect to"
-  default     = "main"
 }
 
 variable "repository_owner" {
   description = "GitHub repository owner"
-  default     = "Azeez Temitope Olanrewaju"
+  type        = string
+
 }
 
 variable "repository_name" {
   description = "GitHub repository name"
-  default     = "https://github.com/lanru2001/aws-cicd-pipeline-project02"
+  type        = string
 }
 
 variable "group_name" {
-  default = "ec2-app-deployment"
+  type = string
 }
 
 variable "create" {
   description = "Whether to create a resource"
   type        = bool
-  default     = true
 }
-
 
 variable "name" {
-  default = "app-deploy"
+  type = string
 }
-
 
 variable "name_prefix" {
-  default = "app"
+  type = string
 }
 
-
 variable "name_suffix" {
-  default = "web"
+  type = string
 }
 
 variable "webhook-secret-token" {
