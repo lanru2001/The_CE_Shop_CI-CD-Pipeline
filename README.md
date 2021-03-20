@@ -1,5 +1,6 @@
 # aws-cicd-pipeline-project
 
+A simple ReactJS app that displays latest stats about COVID-19.
 
 AWS CI/CD Pipeline using Github, CodeBuild, CodeDeploy and CodePipeline that automate the entire build and deployment process after a new commit.
 
