@@ -1,29 +1,17 @@
 version: 0.0
 os: linux
-
 files:
-  - source: /
-    destination: /home/ec2-user/server
-
-permissions:
-  - object: /
-    pattern: "**"
-    owner: ec2-user
-    group: ec2-user
-
+  - source: /index.html
+    destination: /var/www/html/
 hooks:
-
   BeforeInstall:
-    - location: script/before_install.sh
+    - location: scripts/install_dependencies
       timeout: 300
       runas: root
-  
-  AfterInstall:
-    - location: script/after_install.sh
+    - location: scripts/start_server
       timeout: 300
       runas: root
-
-  ApplicationStart:
-    - location: script/app_start.sh
+  ApplicationStop:
+    - location: scripts/stop_server
       timeout: 300
       runas: root
