@@ -124,10 +124,10 @@ resource "aws_security_group" "instance" {
 resource "aws_network_interface" "my_network_interface" {
   count.      = var.create ? 2:0 
   subnet_id   = aws_subnet.public-subnets.id
-  private_ips = ["172.16.10.100"] # Change the private ip 
+  private_ips = [ "10.0.0.5" ] # Change the private ip 
 
   tags = {
-    Name = "primary_network_interface"
+    Name = "primary_network_interface" #change it to variable 
   }
 }
 
