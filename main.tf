@@ -6,98 +6,139 @@ resource "aws_key_pair" "mykeypair" {
 }
 
 
-resource "aws_vpc" "app-vpc" {
-  cidr_block           = var.vpc-cidr # Check how to dynamically set cidr_block 
-  enable_dns_support   = true
-   enable_dns_hostname = true 
-  tags = {
-    Name = "app-vpc"
+#VPC 
+resource "aws_vpc" "pipeline_vpc" {
+  cidr_block              = var.vpc_cidr 
+  enable_dns_support      = true
+  enable_dns_hostnames    = true
+
+  tags       = {
+    Name     = "${local.environment_prefix}-dev-vpc"
   }
 }
 
-resource "aws_subnet" "private-subnets" {
-  vpc_id                  = aws_vpc.app-vpc.id
-  count                   = length(var.azs)
-  availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
-  map_public_ip_on_launch = true
-  cidr_block              = element(var.private-subnets, count.index)
+#Private subnets
+resource "aws_subnet" "pipeline_private_subnets" {
+  count                   = var.create ? 2:0 
+  vpc_id                  = aws_vpc.pipeline_vpc.id
+  availability_zone       = var.azs[count.index]  
+  cidr_block              = var.private_subnets_cidr[count.index]   
 
-  tags = {
-    Name = "private-subnet-${count.index + 1}"
+  tags    = {
+    Name  = "topman-private-subnet-${count.index +1}"
   }
 }
 
-resource "aws_subnet" "public-subnets" {
-  vpc_id                  = aws_vpc.app-vpc.id
-  count                   = length(var.azs)
-  availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
-  map_public_ip_on_launch = true
-  cidr_block              = element(var.public-subnets, count.index)
+#Pubic subnets
+resource "aws_subnet" "pipeline_public_subnets" {
+  count                     = var.create ? 2:0 
+  vpc_id                   = aws_vpc.pipeline_vpc.id
+  availability_zone        = var.azs[count.index]    
+  map_public_ip_on_launch  = true
+  cidr_block               = var.public_subnets_cidr[count.index]   
 
-  tags = {
-    Name = "public-subnet-${count.index + 1}"
+  tags     = {
+    Name   = "topman-public-subnet-${count.index +1}"
   }
 }
 
 #IGW
-resource "aws_internet_gateway" "app-igw" {
-  vpc_id = aws_vpc.app-vpc.id
+resource "aws_internet_gateway" "pipeline_igw" {
+  vpc_id                    = aws_vpc.pipeline_vpc.id
 
-  tags = {
-    Name = "app-igw"
+  tags     = {
+    Name   = "${local.environment_prefix}-igw"
   }
 }
 
-#route table for public subnet
-resource "aws_route_table" "public-rtable" {
-  vpc_id = aws_vpc.app-vpc.id
+#Route table for public subnet
+resource "aws_route_table" "pipeline_public_rtable" {
+  count                     = var.create ? 2:0 
+  vpc_id                    = aws_vpc.pipeline_vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.app-igw.id
+    cidr_block              = "0.0.0.0/0"
+    gateway_id              = aws_internet_gateway.pipeline_igw.id
   }
 
-  tags = {
-    Name = "app-public-rtable"
+  tags    = {
+    Name  = "${local.environment_prefix }-prtable-${count.index + 1}"
   }
 
-  depends_on = [aws_internet_gateway.app-igw]
+  depends_on = [ aws_internet_gateway.pipeline_igw ]
 }
 
-#route table for private subnet
-resource "aws_route_table" "private-rtable" {
-  vpc_id = aws_vpc.app-vpc.id
+#Route table for private subnet
+resource "aws_route_table" "pipeline_private_rtable" {
+  count                     = var.create ? 2:0 
+  vpc_id                    = aws_vpc.pipeline_vpc.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.app-igw.id
+  #route {
+  #  cidr_block              = "0.0.0.0/0"
+  #  gateway_id              = aws_internet_gateway.pipeline_igw.id
+  #}
+
+  tags    = {
+    Name  = "${local.environment_prefix }-pvrtable-${count.index + 1}"
   }
 
-  tags = {
-    Name = "app-public-rtable"
-  }
-
-  depends_on = [aws_internet_gateway.app-igw]
+  depends_on = [aws_internet_gateway.pipeline_igw]
 }
 
-#route table association public subnets
+#Assign the route table to public subnets
 resource "aws_route_table_association" "public-subnet-association" {
-  count          = length(var.public-subnets[0])
-  subnet_id      = element(aws_subnet.public-subnets[0].*.id, count.index)
-  route_table_id = aws_route_table.public-rtable.id
+  count                     = var.create ? 2:0 
+  subnet_id                 = aws_subnet.pipeline_public_subnets[count.index].id
+  route_table_id            = aws_route_table.pipeline_public_rtable[count.index].id
 }
 
-#route table association private subnets
+#Assign the route table to private subnets
 resource "aws_route_table_association" "private-subnet-association" {
-  count          = length(var.private-subnets[0])
-  subnet_id      = element(aws_subnet.private-subnets[0].*.id, count.index)
-  route_table_id = aws_route_table.private-rtable.id
+  count                     = var.create ? 2:0 
+  subnet_id                 = aws_subnet.pipeline_private_subnets[count.index].id
+  route_table_id            = aws_route_table.pipeline_private_rtable[count.index].id
 }
 
+# Public route 
+resource "aws_route" "public_route" {
+  count           = var.create ? 2:0 
+  route_table_id            = aws_route_table.pipeline_public_rtable[count.index].id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id                =  aws_internet_gateway.pipeline_igw.id 
+}
 
-resource "aws_security_group" "instance" {
-  name        = "test-sg"
-  description = "Allow traffic for instances"
+# private route 
+resource "aws_route" "private_route" {
+  count                     = var.create ? 2:0 
+  route_table_id            = aws_route_table.pipeline_private_rtable[count.index].id
+  destination_cidr_block    = "0.0.0.0/0"
+  nat_gateway_id            = aws_nat_gateway.pipeline_nat_gw.id
+}
+
+# EIP 
+resource "aws_eip" "nat_eip" {
+   vpc                       = true 
+   #associate_with_private_ip = "10.0.0.5"
+   depends_on                 = [aws_internet_gateway.pipeline_igw]
+
+}
+
+# NAT Gateway
+resource "aws_nat_gateway" "uclib_nat_gw" {
+  allocation_id             = aws_eip.nat_eip.id
+  subnet_id                 = aws_subnet.pipeline_public_subnets[0].id
+  depends_on                = [ aws_internet_gateway.pipeline_igw ]
+
+  tags = {
+    Name =  "${local.module_prefix}-nat-gateway"
+  }
+}
+
+# Security group 
+resource "aws_security_group" "pipeline_security_group" {
+  name                      = "${local.module_prefix}-sg"
+  description               = "Allow traffic for instances"
+  vpc_id                    = aws_vpc.pipeline_vpc.id
 
   ingress {
     from_port   = 22
@@ -113,17 +154,40 @@ resource "aws_security_group" "instance" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 8080
+    to_port     = 8080
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+   ingress {
+    protocol    = "tcp"
+    from_port   = 3000
+    to_port     = 3000
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    =  -1
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
 
-resource "aws_network_interface" "my_network_interface" {
+  depends_on = [
+      aws_vpc.pipeline_vpc   
+  ]
+}resource "aws_network_interface" "my_network_interface" {
   count.      = var.create ? 2:0 
-  subnet_id   = aws_subnet.public-subnets.id
+  subnet_id   = aws_subnet.pipeline_public_subnets.id
   private_ips = [ "10.0.0.5" ] # Change the private ip 
 
   tags = {
