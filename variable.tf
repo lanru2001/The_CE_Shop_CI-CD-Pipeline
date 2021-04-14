@@ -35,7 +35,7 @@ variable "key_name" {
   type = string
 }
 
-variable "vpc-cidr" {
+variable "vpc_cidr" {
   type = string
 }
 
@@ -43,11 +43,11 @@ variable "azs" {
   type = list
 }
 
-variable "public-subnets" {
+variable "public_subnets" {
   type = list
 }
 
-variable "private-subnets" {
+variable "private_subnets" {
   type = list
 }
 variable "account_name" {
