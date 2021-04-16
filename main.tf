@@ -185,14 +185,16 @@ resource "aws_security_group" "pipeline_security_group" {
   depends_on = [
       aws_vpc.pipeline_vpc   
   ]
-}resource "aws_network_interface" "my_network_interface" {
-  count.      = var.create ? 2:0 
-  subnet_id   = aws_subnet.pipeline_public_subnets.id
-  private_ips = [ "10.0.0.5" ] # Change the private ip 
+}
 
-  tags = {
-    Name = "primary_network_interface" #change it to variable 
+resource "aws_network_interface"  "uclib_interface" {
+  count                 = var.create ? 2:0 
+  subnet_id             = var.pipeline_public_subnets[count.index].id 
+  tags =  {
+
+    Name = var.name
   }
+
 }
 
 resource "aws_instance" "webserver" {
