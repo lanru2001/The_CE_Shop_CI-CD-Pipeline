@@ -3,7 +3,8 @@ variable "region" {
 }
 
 variable "AMI" {
-  type = string
+  type.   = string
+  default = ""
 }
 
 variable "environment" {
