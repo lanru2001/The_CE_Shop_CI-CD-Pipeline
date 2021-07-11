@@ -50,3 +50,21 @@ resource "aws_security_group" "pipeline_security_group" {
       aws_vpc.pipeline_vpc   
   ]
 }
+
+
+# prepare a security group for our load balancer my_alb.
+resource "aws_security_group" "my_alb_security_group" {
+  vpc_id = aws_vpc.app-vpc.id
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
