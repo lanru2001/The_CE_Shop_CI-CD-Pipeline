@@ -5,60 +5,7 @@ resource "aws_key_pair" "mykeypair" {
   public_key = file(var.PATH_TO_PUBLIC_KEY)
 }
 
-# Security group 
-resource "aws_security_group" "pipeline_security_group" {
-  name                      = "${local.module_prefix}-sg"
-  description               = "Allow traffic for instances"
-  vpc_id                    = aws_vpc.pipeline_vpc.id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 8080
-    to_port     = 8080
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-   ingress {
-    protocol    = "tcp"
-    from_port   = 3000
-    to_port     = 3000
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    =  -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  depends_on = [
-      aws_vpc.pipeline_vpc   
-  ]
-}
-
-resource "aws_network_interface"  "uclib_interface" {
+resource "aws_network_interface"  "pipeline_interface" {
   count                 = var.create ? 2:0 
   subnet_id             = var.pipeline_public_subnets[count.index].id 
   tags =  {
@@ -115,23 +62,6 @@ resource "aws_lb" "my_alb" {
     enabled = false
   }
 
-}
-
-# prepare a security group for our load balancer my_alb.
-resource "aws_security_group" "my_alb_security_group" {
-  vpc_id = aws_vpc.app-vpc.id
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 # create an alb listener for my_alb. forward rule: only accept incoming HTTP request on port 80, then it'll be forwarded to port target:8080.
