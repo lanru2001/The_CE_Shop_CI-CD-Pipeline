@@ -113,29 +113,6 @@ resource "aws_launch_configuration" "my_launch_configuration" {
 
 }
 
-# security group for launch config my_launch_configuration.
-resource "aws_security_group" "my_launch_config_security_group" {
-  vpc_id = aws_vpc.app-vpc.id
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 # create an autoscaling then attach it into my_alb_target_group.
 resource "aws_autoscaling_attachment" "my_aws_autoscaling_attachment" {
   alb_target_group_arn   = aws_lb_target_group.my_alb_target_group.arn
