@@ -35,7 +35,7 @@ artifacts:
     - node_modules/async/*
     - node_modules/lodash/*
     - appspec.yml
-
+    - imagedefinitions.json
 
 
 
