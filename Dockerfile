@@ -6,7 +6,7 @@ COPY my-app/public  ./my-app/
 
 FROM node:10 AS server-build
 WORKDIR /root/
-COPY --from=ui-build /usr/src/app/my-app/build ./my-app/build
+COPY --from=ui-build /usr/src/app/ ./my-app/
 COPY api/package*.json ./api/
 RUN npm install && npm run build
 COPY api/server.js ./api/
