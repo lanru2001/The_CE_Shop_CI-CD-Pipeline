@@ -28,10 +28,10 @@ phases:
       - cat imagedefinitions.json 
 artifacts:
   files:
-    - app.js
+    - api/server.js
     - index.html
-    - package.json
-    - package-lock.json
+    - api/package.json
+    - api/package-lock.json
     - node_modules/async/*
     - node_modules/lodash/*
     - appspec.yml
