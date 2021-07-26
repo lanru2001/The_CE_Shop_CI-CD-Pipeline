@@ -29,7 +29,6 @@ phases:
 artifacts:
   files:
     - api/server.js
-    - index.html
     - api/package.json
     - api/package-lock.json
     - node_modules/async/*
@@ -37,5 +36,5 @@ artifacts:
     - appspec.yml
     - imagedefinitions.json
     - my-app/src/App.js 
-
+    - my-app/src/
 
