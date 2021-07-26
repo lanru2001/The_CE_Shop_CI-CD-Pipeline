@@ -1,6 +1,7 @@
 FROM node:10 AS ui-build
 WORKDIR /usr/src/app
-COPY my-app/ ./my-app/
+COPY my-app/src  ./my-app/
+COPY my-app/public  ./my-app/
 RUN npm install && npm run build
 
 FROM node:10 AS server-build
