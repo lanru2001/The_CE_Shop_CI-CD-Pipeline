@@ -34,6 +34,7 @@ artifacts:
     - node_modules/async/*
     - node_modules/lodash/*
     - appspec.yml
+    - Dockerfile
     - imagedefinitions.json
     - my-app/src/App.js 
     - my-app/src/
